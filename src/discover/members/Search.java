@@ -86,7 +86,7 @@ public class Search extends HttpServlet {
             jsonObject.put("nickname", rs.getString("nickname"));
             jsonObject.put("realname", rs.getString("realname"));
             jsonObject.put("gender", rs.getString("gender"));
-            jsonObject.put("age", rs.getInt("age"));
+            jsonObject.put("age", String.valueOf(rs.getInt("age")));
             jsonArray.add(jsonObject);
         }
 

@@ -41,7 +41,7 @@ public class RegisterOrLogin extends  HttpServlet {
         String method = (String)jsonObject.get("method");
         String account = (String)jsonObject.get("account");
         String password = (String)jsonObject.get("password");
-        String device_type = (String)jsonObject.get("device_type");
+        String device_type = null;
 
 
         //判断所有字符串是否符合规范
@@ -56,6 +56,7 @@ public class RegisterOrLogin extends  HttpServlet {
                     // 查找数据库中是否有
                     try {
 
+                        device_type = (String)jsonObject.get("device_type");
                         String sql = "SELECT * FROM user WHERE account = ? limit 1";
                         Class.forName(JDBC_DRIVER); //注册JDBC驱动程序，需要初始化驱动程序，这样就可以打开与数据库的通信
                         conn = DriverManager.getConnection(DB_URL + DB_NAME_SGS, USER, PASS);//创建一个Connection对象，代表数据库的物理连接

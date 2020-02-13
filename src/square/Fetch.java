@@ -170,10 +170,10 @@ public class Fetch extends HttpServlet {
             jsonObject.put("title", rs.getString("title"));
             jsonObject.put("content", rs.getString("content"));
             jsonObject.put("create_date", rs.getString("create_date"));
-            jsonObject.put("comment_count", rs.getInt("comment_count"));
-            jsonObject.put("like_count", rs.getInt("like_count"));
-            jsonObject.put("dislike_count", rs.getInt("dislike_count"));
-            jsonObject.put("picture_count", rs.getInt("picture_count"));
+            jsonObject.put("comment_count", rs.getString("comment_count"));
+            jsonObject.put("like_count", rs.getString("like_count"));
+            jsonObject.put("dislike_count", rs.getString("dislike_count"));
+            jsonObject.put("picture_count", rs.getString("picture_count"));
             jsonArray.add(jsonObject);
         }
 
@@ -210,9 +210,9 @@ public class Fetch extends HttpServlet {
             jsonObject.put("type", rs.getString("type"));
             jsonObject.put("content", rs.getString("content"));
             jsonObject.put("create_date", rs.getString("create_date"));
-            jsonObject.put("comment_count", rs.getInt("comment_count"));
-            jsonObject.put("like_count", rs.getInt("like_count"));
-            jsonObject.put("picture_count", rs.getInt("picture_count"));
+            jsonObject.put("comment_count", rs.getString("comment_count"));
+            jsonObject.put("like_count", rs.getString("like_count"));
+            jsonObject.put("picture_count", rs.getString("picture_count"));
             jsonArray.add(jsonObject);
         }
 

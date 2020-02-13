@@ -59,7 +59,7 @@ public class StickList extends HttpServlet {
                     JSONArray userlist = new JSONArray();
                     if(rs.next()){
                         JSONObject user = new JSONObject();
-                        user.put("user_id", rs.getInt("user_id"));
+                        user.put("user_id", rs.getString("user_id"));
                         user.put("nickname", rs.getString("nickname"));
                         user.put("realname", rs.getString("realname"));
                         user.put("gender", rs.getString("gender"));

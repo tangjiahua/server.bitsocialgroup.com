@@ -78,7 +78,7 @@ public class SocialgroupManager extends HttpServlet {
 
         while(rs.next()){
             JSONObject socialgroup = new JSONObject();
-            Integer socialgroup_id = rs.getInt("socialgroup_id");
+            String socialgroup_id = String.valueOf(rs.getInt("socialgroup_id"));
             String name = rs.getString("name");
             String avatar = rs.getString("avatar");
 

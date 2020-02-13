@@ -147,7 +147,7 @@ public class Update extends HttpServlet {
 
                                         int oldCount = rs.getInt("avatar");
                                         int newCount = oldCount + 1;
-                                        String newFileName = user_id + "#" + newCount + ".jpg";
+                                        String newFileName = user_id + "@" + newCount + ".jpg";
                                         String newAvatarDirPath = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/avatar";
                                         File file = new File(newAvatarDirPath, newFileName);
                                         if (!file.exists()) {
@@ -208,7 +208,7 @@ public class Update extends HttpServlet {
                                     if (rs.next()) {
                                         int oldCount = rs.getInt("background");
                                         int newCount = oldCount + 1;
-                                        String newFileName = user_id + "#" + newCount + ".jpg";
+                                        String newFileName = user_id + "@" + newCount + ".jpg";
                                         String newBackgroundDirPath = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/background";
                                         File file = new File(newBackgroundDirPath, newFileName);
                                         if (!file.exists()) {
@@ -261,7 +261,7 @@ public class Update extends HttpServlet {
                                         return;
                                     }
 
-                                    String newFileName = user_id + "#" + tmpInt + ".jpg";
+                                    String newFileName = user_id + "@" + tmpInt + ".jpg";
                                     String newWallDirPath = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/wall";
                                     File file = new File(newWallDirPath, newFileName);
                                     if (!file.exists()) {
@@ -383,14 +383,14 @@ public class Update extends HttpServlet {
                                 if(pic_count >= delete){
                                     // 首先将本地的图片命名改变一下
                                     String localUrl = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/wall/";
-                                    String deleteFilePath = localUrl + user_id + "#" + delete + ".jpg";
+                                    String deleteFilePath = localUrl + user_id + "@" + delete + ".jpg";
                                     //先删除图片
                                     File deleteFile = new File(deleteFilePath);
                                     deleteFile.delete();
                                     //将其他图片改名
                                     for(int i = delete + 1; i <= pic_count; i++){
-                                        String newFilePath = localUrl + user_id + "#" + (i-1) + ".jpg";
-                                        String oldFilePath = localUrl + user_id + "#" + i + ".jpg";
+                                        String newFilePath = localUrl + user_id + "@" + (i-1) + ".jpg";
+                                        String oldFilePath = localUrl + user_id + "@" + i + ".jpg";
 
                                         File oldFile = new File(oldFilePath);
                                         File newFile = new File(newFilePath);

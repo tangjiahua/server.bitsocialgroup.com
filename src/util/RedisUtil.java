@@ -4,7 +4,7 @@ import redis.clients.jedis.*;
 public class RedisUtil {
 
     //服务器IP地址
-    private static String ADDR = "localhost";
+    private static String ADDR = "127.0.0.1";
     //端口
     private static int PORT = 6379;
     //密码

@@ -168,13 +168,13 @@ public class FetchDetail extends HttpServlet {
         JSONArray json_array = new JSONArray();
         while(rs.next()){
             JSONObject json_object = new JSONObject();
-            json_object.put("comment_id", rs.getInt("comment_id"));
-            json_object.put("user_id", rs.getInt("user_id"));
+            json_object.put("comment_id", rs.getString("comment_id"));
+            json_object.put("user_id", rs.getString("user_id"));
             json_object.put("user_nickname", rs.getString("nickname"));
             json_object.put("user_avatar", rs.getString("avatar"));
             json_object.put("content", rs.getString("content"));
             json_object.put("create_date", rs.getString("create_date"));
-            json_object.put("reply_count", rs.getInt("reply_count"));
+            json_object.put("reply_count", rs.getString("reply_count"));
 
             json_array.add(json_object);
         }
@@ -193,11 +193,11 @@ public class FetchDetail extends HttpServlet {
         JSONArray json_array_reply = new JSONArray();
         while(rs.next()){
             JSONObject json_object = new JSONObject();
-            json_object.put("comment_id", rs.getInt("comment_id"));
-            json_object.put("reply_id",rs.getInt("reply_id"));
-            json_object.put("reply_from_user_id", rs.getInt("reply_from_user_id"));
+            json_object.put("comment_id", rs.getString("comment_id"));
+            json_object.put("reply_id",rs.getString("reply_id"));
+            json_object.put("reply_from_user_id", rs.getString("reply_from_user_id"));
             json_object.put("reply_from_user_nickname", rs.getString("reply_from_user_nickname"));
-            json_object.put("reply_to_user_id", rs.getInt("reply_to_user_id"));
+            json_object.put("reply_to_user_id", rs.getString("reply_to_user_id"));
             json_object.put("reply_to_user_nickname", rs.getString("reply_to_user_nickname"));
             json_object.put("content", rs.getString("content"));
             json_object.put("create_date", rs.getString("create_date"));
@@ -272,10 +272,10 @@ public class FetchDetail extends HttpServlet {
         JSONArray json_array = new JSONArray();
         while(rs.next()){
             JSONObject json_object = new JSONObject();
-            json_object.put("judge_id", rs.getInt("judge_id"));
-            json_object.put("user_id",rs.getInt("from_user_id"));
+            json_object.put("judge_id", rs.getString("judge_id"));
+            json_object.put("user_id",rs.getString("from_user_id"));
             json_object.put("nickname", rs.getString("nickname"));
-            json_object.put("avatar", rs.getInt("avatar"));
+            json_object.put("avatar", rs.getString("avatar"));
 
             json_array.add(json_object);
         }

@@ -105,11 +105,11 @@ public class FetchNotification extends HttpServlet {
 
         while(rs.next()){
             JSONObject json_object = new JSONObject();
-            json_object.put("notification_id", rs.getInt("notification_id"));
-            json_object.put("user_id", rs.getInt("user_id"));
+            json_object.put("notification_id", rs.getString("notification_id"));
+            json_object.put("user_id", rs.getString("user_id"));
             json_object.put("user_nickname", rs.getString("user_nickname"));
-            json_object.put("user_avatar", rs.getInt("user_avatar"));
-            json_object.put("type", rs.getInt("type"));
+            json_object.put("user_avatar", rs.getString("user_avatar"));
+            json_object.put("type", rs.getString("type"));
             json_object.put("create_date", rs.getString("create_date"));
             json_object.put("brief", rs.getString("brief"));
             json_object.put("welcome", rs.getString("welcome"));

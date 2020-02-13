@@ -19,7 +19,7 @@ public class Response {
         try{
             response.setContentType("application/json;charset=UTF-8");
             JSONObject responseJson = new JSONObject();
-            responseJson.put("result", 1);
+            responseJson.put("result", "1");
             responseJson.put("info", info);
             PrintWriter out = response.getWriter();
             out.println(responseJson);
@@ -34,7 +34,7 @@ public class Response {
         try{
             response.setContentType("application/json;charset=UTF-8");
             JSONObject responseJson = new JSONObject();
-            responseJson.put("result", 1);
+            responseJson.put("result", "1");
             responseJson.put("info", jsonObject);
             PrintWriter out = response.getWriter();
             out.println(responseJson);
@@ -49,7 +49,7 @@ public class Response {
         try{
             response.setContentType("application/json;charset=UTF-8");
             JSONObject responseJson = new JSONObject();
-            responseJson.put("result", 1);
+            responseJson.put("result", "1");
             responseJson.put("info", jsonArray);
             PrintWriter out = response.getWriter();
             out.println(responseJson);
@@ -71,7 +71,7 @@ public class Response {
         try{
             response.setContentType("application/json;charset=UTF-8");
             JSONObject responseJson = new JSONObject();
-            responseJson.put("result", 0);
+            responseJson.put("result", "0");
             responseJson.put("info", error);
             PrintWriter out = response.getWriter();
             out.println(responseJson);
@@ -88,7 +88,7 @@ public class Response {
         try{
             response.setContentType("application/json;charset=UTF-8");
             JSONObject responseJson = new JSONObject();
-            responseJson.put("result", 0);
+            responseJson.put("result", "0");
             responseJson.put("info", "身份验证失败");
             PrintWriter out = response.getWriter();
             out.println(responseJson);
@@ -106,7 +106,7 @@ public class Response {
         try{
             response.setContentType("application/json;charset=UTF-8");
             JSONObject responseJson = new JSONObject();
-            responseJson.put("result", 2);
+            responseJson.put("result", "2");
             responseJson.put("info", info);
             PrintWriter out = response.getWriter();
             out.println(responseJson);

@@ -145,6 +145,12 @@ public class PushSquare extends HttpServlet {
                     // 假设之前各种验证出了问题，那就应该已经return过了，说明现在其实就不需要验证了已经。
                     if(tmpNum <= 9){
                         if(savePictures(item, square_item_id, tmpNum, socialgroup_id, square_item_type)){
+                            if(tmpNum == image_count){
+                                if(updateStatusInDataBase(response, tmpNum, image_count, square_item_type, socialgroup_id, square_item_id)){
+                                    Response.responseSuccessInfo(response, "成功上传");
+                                    return;
+                                }
+                            }
                             tmpNum = tmpNum + 1;
                         }
                     }else{
@@ -152,11 +158,7 @@ public class PushSquare extends HttpServlet {
                         return;
                     }
 
-                    if(tmpNum == image_count){
-                            if(updateStatusInDataBase(response, tmpNum, image_count, square_item_type, socialgroup_id, square_item_id)){
-                            Response.responseSuccessInfo(response, "成功上传");
-                        }
-                    }
+
 
                 }
 
@@ -178,7 +180,7 @@ public class PushSquare extends HttpServlet {
 
 
 
-        String fileName = square_item_id + "#" + tmpNum + ".jpg";
+        String fileName = square_item_id + "@" + tmpNum + ".jpg";
         String fileDirPath = Util.RESOURCE_URL + "socialgroup_"
                 + socialgroup_id + "/square/" + square_item_type + "/picture";
         File file = new File(fileDirPath, fileName);
