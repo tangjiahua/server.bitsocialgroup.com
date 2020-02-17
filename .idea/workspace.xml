@@ -2,34 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6b9cd80-8f13-4151-b88b-4447c31a564b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/discover/members/FetchMembers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/discover/members/FetchMembers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/discover/members/Search.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/discover/members/Search.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/other/RegisterOrLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/other/RegisterOrLogin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/other/SocialgroupManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/other/SocialgroupManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/profile/StickList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/profile/StickList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/profile/Update.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/profile/Update.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/square/Fetch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/square/Fetch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/square/FetchDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/square/FetchDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/square/PushSquare.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/square/PushSquare.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/ImgCompress.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/ImgCompress.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/RedisUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/RedisUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Response.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/wall/FetchNotification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/wall/FetchNotification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/META-INF/project.kotlin_module" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/discover/members/FetchMembers.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/discover/members/FetchMembers.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/discover/members/Search.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/discover/members/Search.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/other/RegisterOrLogin.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/other/RegisterOrLogin.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/other/SocialgroupManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/other/SocialgroupManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/profile/StickList.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/profile/StickList.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/profile/Update.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/profile/Update.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/square/Fetch.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/square/Fetch.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/square/FetchDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/square/FetchDetail.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/square/PushSquare.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/square/PushSquare.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/util/RedisUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/util/RedisUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/util/Response.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/util/Response.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/wall/FetchNotification.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/wall/FetchNotification.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

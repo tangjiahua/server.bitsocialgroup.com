@@ -2,10 +2,7 @@ package square;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import util.Response;
-import util.Sql;
-import util.TestInfo;
-import util.Util;
+import util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,12 +36,17 @@ public class Fetch extends HttpServlet {
         String square_item_type = null;
         String method = null;
         String square_item_id = null;
+        String user_id = null;
+        String password = null;
         JSONObject jsonObject = Util.requestToJsonObject(req);
 
         socialgroup_id = jsonObject.getString("socialgroup_id");
         square_item_type = jsonObject.getString("square_item_type");
         method = jsonObject.getString("method");
         square_item_id = jsonObject.getString("square_item_id");
+        user_id = jsonObject.getString("user_id");
+        password = jsonObject.getString("password");
+
 
         if(!TestInfo.testSocialgroupId(socialgroup_id)){
             Response.responseError(resp, "fetch.java socialgroup_id格式不对");
@@ -52,14 +54,17 @@ public class Fetch extends HttpServlet {
         }
 
         try{
-            Class.forName(JDBC_DRIVER); //注册JDBC驱动程序，需要初始化驱动程序，这样就可以打开与数据库的通信
+            if(TestInfo.testSocialgroupId(socialgroup_id) && TestInfo.testUser_id(user_id) && TestInfo.testPassword(password)
+                    && Authenticator.authenticate(user_id, password)){
+                Class.forName(JDBC_DRIVER); //注册JDBC驱动程序，需要初始化驱动程序，这样就可以打开与数据库的通信
 
-            if(method.equals("1")){
-                fetchNew(req, resp, square_item_type,  socialgroup_id,  square_item_id);
-            }else if(method.equals("2")){
-                fetchOld(req, resp, square_item_type,  socialgroup_id,  square_item_id);
-            }else{
-                Response.responseError(resp, "fetch.java: 没有这样的method");
+                if(method.equals("1")){
+                    fetchNew(req, resp, square_item_type,  socialgroup_id,  square_item_id);
+                }else if(method.equals("2")){
+                    fetchOld(req, resp, square_item_type,  socialgroup_id,  square_item_id);
+                }else{
+                    Response.responseError(resp, "fetch.java: 没有这样的method");
+                }
             }
         } catch (SQLException | ClassNotFoundException e) {
             Response.responseError(resp, "fetch.java: " + e.toString());

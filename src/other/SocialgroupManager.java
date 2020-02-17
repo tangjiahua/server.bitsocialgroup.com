@@ -109,7 +109,7 @@ public class SocialgroupManager extends HttpServlet {
 
         if(rs.next()){
             //竟然已经有结果了
-            Response.responseError(response, "已经加入了该社群");
+            Response.responseSuccessInfo(response, "已经加入了该社群");
 
         }else{
             //没有结果，说明可以加入
