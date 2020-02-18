@@ -120,7 +120,7 @@ public class Detail extends  HttpServlet {
 
                         if(rs.next()){
                             JSONObject jsonObj = new JSONObject();
-                            jsonObj.put("user_id", user_id);
+                            jsonObj.put("user_id", rs.getString("user_id"));
                             jsonObj.put("nickname", rs.getString("nickname"));
                             jsonObj.put("realname", rs.getString("realname"));
                             jsonObj.put("gender", rs.getString("gender"));
@@ -162,7 +162,7 @@ public class Detail extends  HttpServlet {
     private void getFullProfile(HttpServletResponse response, String user_id, ResultSet rs) throws SQLException {
         if(rs.next()){
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("user_id", user_id);
+            jsonObj.put("user_id", rs.getString("user_id"));
             jsonObj.put("nickname", rs.getString("nickname"));
             jsonObj.put("realname", rs.getString("realname"));
             jsonObj.put("gender", rs.getString("gender"));

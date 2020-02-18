@@ -44,6 +44,7 @@ public class FetchNotification extends HttpServlet {
         method = jsonObject.getString("method");
         notification_id = jsonObject.getString("notification_id");
 
+
         user_id = jsonObject.getString("user_id");
         password = jsonObject.getString("password");
 

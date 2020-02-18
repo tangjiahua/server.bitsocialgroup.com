@@ -159,7 +159,9 @@ public class Update extends HttpServlet {
                                         String newThumbnailDirPath = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/avatar/thumbnail";
                                         ImgCompress compressor = new ImgCompress(newAvatarDirPath + "/" + newFileName);
                                         compressor.resizeFix(150, 150, newThumbnailDirPath + "/" + newFileName);
-
+                                        // 保存完毕，现在将原头像也压缩一下
+                                        ImgCompress compressorAvatar = new ImgCompress(newAvatarDirPath + "/" + newFileName);
+                                        compressor.resizeFix(1000, 1000, newAvatarDirPath + "/" + newFileName);
                                         rs.close();
 
                                         // 现在将数据插入数据库
@@ -219,7 +221,7 @@ public class Update extends HttpServlet {
 
                                         // 保存完毕，现在将wall picture压缩一下
                                         ImgCompress compressor = new ImgCompress(newBackgroundDirPath + "/" + newFileName);
-                                        compressor.resizeFix(1000, 1000, newBackgroundDirPath + "/" + newFileName);
+                                        compressor.resizeFix(2000, 2000, newBackgroundDirPath + "/" + newFileName);
 
                                         rs.close();
                                         // 现在将数据插入数据库
