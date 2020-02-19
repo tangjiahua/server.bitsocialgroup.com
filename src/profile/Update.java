@@ -265,6 +265,8 @@ public class Update extends HttpServlet {
 
                                     String newFileName = user_id + "@" + tmpInt + ".jpg";
                                     String newWallDirPath = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/wall";
+                                    String newWallThumbnailDirPath = newWallDirPath + "/thumbnail";
+
                                     File file = new File(newWallDirPath, newFileName);
                                     if (!file.exists()) {
                                         file.createNewFile();
@@ -275,6 +277,9 @@ public class Update extends HttpServlet {
                                     // 保存完毕，现在将wall picture压缩一下
                                     ImgCompress compressor = new ImgCompress(newWallDirPath + "/" + newFileName);
                                     compressor.resizeFix(1000, 1000, newWallDirPath + "/" + newFileName);
+
+                                    // 保存完毕，现在将原头像也压缩一下
+                                    compressor.resizeFix(500, 500, newWallThumbnailDirPath + "/" + newFileName);
 
 
                                     if (new_wall_picture_count == tmpNum) {
@@ -385,18 +390,29 @@ public class Update extends HttpServlet {
                                 if(pic_count >= delete){
                                     // 首先将本地的图片命名改变一下
                                     String localUrl = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/wall/";
+                                    String localThumUrl = localUrl + "thumbnail/";
+
                                     String deleteFilePath = localUrl + user_id + "@" + delete + ".jpg";
+                                    String deleteThumbFilePath = localThumUrl + user_id + "@" + delete + ".jpg";
                                     //先删除图片
                                     File deleteFile = new File(deleteFilePath);
+                                    File deleteThumbFile = new File(deleteThumbFilePath);
+                                    deleteThumbFile.delete();
                                     deleteFile.delete();
                                     //将其他图片改名
                                     for(int i = delete + 1; i <= pic_count; i++){
                                         String newFilePath = localUrl + user_id + "@" + (i-1) + ".jpg";
                                         String oldFilePath = localUrl + user_id + "@" + i + ".jpg";
+                                        String newThumbFilePath = localThumUrl + user_id + "@" + (i-1) + ".jpg";
+                                        String oldThumbFilePath = localThumUrl + user_id + "@" + i + ".jpg";
+
 
                                         File oldFile = new File(oldFilePath);
                                         File newFile = new File(newFilePath);
-                                        if(oldFile.renameTo(newFile)){
+                                        File oldThumbFile = new File(oldThumbFilePath);
+                                        File newThumbFile = new File(newThumbFilePath);
+
+                                        if(oldFile.renameTo(newFile) && oldThumbFile.renameTo(newThumbFile)){
                                             rs.close();
                                         }else{
                                             Response.responseError(response, "Update.java: 删除照片墙图片时更改命名失败");
