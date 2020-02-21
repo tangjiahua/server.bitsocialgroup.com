@@ -50,7 +50,6 @@ public class Reply extends HttpServlet {
         String comment_id = null;
         String reply_to_user_id = null;
         String content = null;
-        String reply_from_user_nickname = null;
         String reply_to_user_nickname = null;
 
         String user_id = null;
@@ -64,7 +63,6 @@ public class Reply extends HttpServlet {
         comment_id = (String)jsonObject.get("comment_id");
         reply_to_user_id = (String)jsonObject.get("reply_to_user_id");
         content = (String)jsonObject.get("content");
-        reply_from_user_nickname = (String)jsonObject.get("reply_from_user_nickname");
         reply_to_user_nickname = (String)jsonObject.get("reply_to_user_nickname");
 
         user_id = (String)jsonObject.get("user_id");
@@ -79,10 +77,10 @@ public class Reply extends HttpServlet {
 
                 if(square_item_type.equals("broadcast")){
                     replySquareItem(response,   socialgroup_id,  square_item_type,  square_item_id,  comment_id,  user_id,
-                             reply_to_user_id,  content,  reply_from_user_nickname,  reply_to_user_nickname);
+                             reply_to_user_id,  content,  reply_to_user_nickname);
                 }else if(square_item_type.equals("circle")){
                     replySquareItem(response,   socialgroup_id,  square_item_type,  square_item_id,  comment_id,  user_id,
-                            reply_to_user_id,  content,  reply_from_user_nickname,  reply_to_user_nickname);
+                            reply_to_user_id,  content,  reply_to_user_nickname);
                 }else{
                     Response.responseError(response, "judge.java square_item_type 不正确");
                 }
@@ -93,15 +91,15 @@ public class Reply extends HttpServlet {
     }
 
     private void replySquareItem(HttpServletResponse response, String socialgroup_id, String square_item_type, String square_item_id, String comment_id, String user_id,
-                                 String reply_to_user_id, String content, String reply_from_user_nickname, String reply_to_user_nickname) throws SQLException, ClassNotFoundException {
+                                 String reply_to_user_id, String content, String reply_to_user_nickname) throws SQLException, ClassNotFoundException {
 
 
         Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
 
         String sql = "INSERT INTO " + square_item_type + "_reply(" + square_item_type + "_id, comment_id, " +
                 "reply_from_user_id, reply_to_user_id, deleted, content, create_date," +
-                " reply_from_user_nickname, reply_to_user_nickname" +
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "  reply_to_user_nickname" +
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
 
 
@@ -116,8 +114,7 @@ public class Reply extends HttpServlet {
         stmt.setInt(5, 0);
         stmt.setString(6, content);
         stmt.setString(7, dateStr);
-        stmt.setString(8, reply_from_user_nickname);
-        stmt.setString(9, reply_to_user_nickname);
+        stmt.setString(8, reply_to_user_nickname);
 
         int result = stmt.executeUpdate();
 

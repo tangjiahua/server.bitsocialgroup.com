@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6b9cd80-8f13-4151-b88b-4447c31a564b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/square/FetchDetailReply.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/profile/Update.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/profile/Update.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/square/FetchDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/square/FetchDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/square/Reply.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/square/Reply.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,6 +113,10 @@
     <state x="364" y="203" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.977@0.23.1680.977" timestamp="1581507054636" />
     <state x="416" y="199" key="#com.intellij.execution.impl.EditConfigurationsDialog/125.1080.1680.1050/0.0.1920.1080@0.0.1920.1080" timestamp="1581241384565" />
     <state x="416" y="218" key="#com.intellij.execution.impl.EditConfigurationsDialog/125.1103.1680.976/0.23.1920.1057@0.23.1920.1057" timestamp="1581007430181" />
+    <state x="339" y="1103" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1582269324778">
+      <screen x="125" y="1103" width="1680" height="976" />
+    </state>
+    <state x="339" y="1103" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/125.1103.1680.976/0.23.1920.1057@125.1103.1680.976" timestamp="1582269324778" />
     <state width="465" height="431" key="DebuggerActiveHint" timestamp="1581509939353">
       <screen x="0" y="23" width="1680" height="977" />
     </state>
@@ -184,11 +190,11 @@
       <screen x="0" y="23" width="1920" height="1057" />
     </state>
     <state x="394" y="127" key="SettingsEditor/125.1103.1680.976/0.23.1920.1057@0.23.1920.1057" timestamp="1581153823945" />
-    <state x="823" y="383" key="extract.method.dialog" timestamp="1581242646580">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state x="1179" y="454" key="extract.method.dialog" timestamp="1582271566126">
+      <screen x="0" y="23" width="1920" height="1057" />
     </state>
     <state x="823" y="383" key="extract.method.dialog/125.1080.1680.1050/0.0.1920.1080@0.0.1920.1080" timestamp="1581242646580" />
-    <state x="823" y="398" key="extract.method.dialog/125.1103.1680.976/0.23.1920.1057@0.23.1920.1057" timestamp="1581191649275" />
+    <state x="1179" y="454" key="extract.method.dialog/125.1103.1680.976/0.23.1920.1057@0.23.1920.1057" timestamp="1582271566126" />
     <state x="625" y="258" width="670" height="676" key="search.everywhere.popup" timestamp="1581154793567">
       <screen x="0" y="23" width="1920" height="1057" />
     </state>
@@ -211,16 +217,6 @@
           <url>file://$PROJECT_DIR$/src/square/Delete.java</url>
           <line>150</line>
           <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/square/FetchDetail.java</url>
-          <line>190</line>
-          <option name="timeStamp" value="56" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/square/FetchDetail.java</url>
-          <line>269</line>
-          <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/profile/Detail.java</url>

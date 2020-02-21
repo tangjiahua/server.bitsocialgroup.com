@@ -14,6 +14,8 @@ import java.sql.*;
 
 @WebServlet("/square/fetch_detail")
 public class FetchDetail extends HttpServlet {
+
+
     private static String JDBC_DRIVER = Sql.GLOBAL_JDBC_DRIVER;
     private static String DB_URL = Sql.GLOBAL_DB_URL;
     private static String DB_NAME_SG = Sql.GLOBAL_DB_NAME_SG;
@@ -57,7 +59,7 @@ public class FetchDetail extends HttpServlet {
 
                 switch (method) {
                     case "comment":
-                        fetchDetail(response, square_item_type, socialgroup_id, square_item_id);
+                        fetchDetailComment(response, square_item_type, socialgroup_id, square_item_id);
                         break;
                     case "like":
                         fetchDetailLike(response, square_item_type, socialgroup_id, square_item_id);
@@ -80,14 +82,14 @@ public class FetchDetail extends HttpServlet {
      * 拉取评论区
      * @param response
      */
-    private void fetchDetail(HttpServletResponse response, String square_item_type, String socialgroup_id, String square_item_id) throws SQLException {
+    private void fetchDetailComment(HttpServletResponse response, String square_item_type, String socialgroup_id, String square_item_id) throws SQLException {
         if(square_item_type.equals("broadcast")){
 
-            fetchDetailBroadcast(response, socialgroup_id, square_item_id);
+            fetchDetailCommentBroadcast(response, socialgroup_id, square_item_id);
 
         }else if(square_item_type.equals("circle")){
 
-            fetchDetailCircle(response, socialgroup_id, square_item_id);
+            fetchDetailCommentCircle(response, socialgroup_id, square_item_id);
 
         }else{
 
@@ -104,7 +106,7 @@ public class FetchDetail extends HttpServlet {
      * @param response
      * @throws SQLException
      */
-    private void fetchDetailBroadcast(HttpServletResponse response, String socialgroup_id, String square_item_id) throws SQLException {
+    private void fetchDetailCommentBroadcast(HttpServletResponse response, String socialgroup_id, String square_item_id) throws SQLException {
         JSONObject json_result = new JSONObject();
 
         // 拉取评论的部分 并添加进json_result中
@@ -112,13 +114,13 @@ public class FetchDetail extends HttpServlet {
                 " nickname, avatar, content, create_date, reply_count" +
                 " FROM broadcast_comment, user_profile WHERE broadcast_comment.broadcast_id = ? AND " +
                 "broadcast_comment.user_id = user_profile.user_id AND broadcast_comment.deleted = 0;";
-        fetchDetailComment(json_result, sql_comment, socialgroup_id, square_item_id);
+        fetchDetailCommentSql(json_result, sql_comment, socialgroup_id, square_item_id);
 
         // 拉取回复的部分 并添加进json_result中
-        String sql_reply = "SELECT comment_id,reply_id, reply_from_user_id, reply_from_user_nickname, " +
-                "reply_to_user_id, reply_to_user_nickname, content, create_date FROM broadcast_reply " +
-                "WHERE deleted = 0 AND broadcast_id = ?;";
-        fetchDetailReply(json_result, sql_reply, socialgroup_id, square_item_id);
+//        String sql_reply = "SELECT comment_id,reply_id, reply_from_user_id, reply_from_user_nickname, " +
+//                "reply_to_user_id, reply_to_user_nickname, content, create_date FROM broadcast_reply " +
+//                "WHERE deleted = 0 AND broadcast_id = ?;";
+//        fetchDetailReply(json_result, sql_reply, socialgroup_id, square_item_id);
 
 
         // 将他们都返回
@@ -133,7 +135,7 @@ public class FetchDetail extends HttpServlet {
      * @param response
      * @throws SQLException
      */
-    private void fetchDetailCircle(HttpServletResponse response, String socialgroup_id, String square_item_id) throws SQLException {
+    private void fetchDetailCommentCircle(HttpServletResponse response, String socialgroup_id, String square_item_id) throws SQLException {
         JSONObject json_result = new JSONObject();
 
         // 拉取评论的部分 并添加进json_result中
@@ -141,15 +143,15 @@ public class FetchDetail extends HttpServlet {
                 "nickname, avatar, content, create_date, reply_count " +
                 "FROM circle_comment, user_profile WHERE circle_comment.circle_id = ? AND " +
                 "circle_comment.user_id = user_profile.user_id AND circle_comment.deleted = 0;";
-        fetchDetailComment(json_result, sql_comment, socialgroup_id, square_item_id);
+        fetchDetailCommentSql(json_result, sql_comment, socialgroup_id, square_item_id);
 
         // 拉取回复的部分 并添加进json_result中
         // "拉取该回复"和"拉取回复区的回复"的区别在于这个地方的回复最多两条
-        String sql_reply = "SELECT comment_id,reply_id, reply_from_user_id, reply_from_user_nickname, " +
-                "reply_to_user_id, reply_to_user_nickname, content, create_date FROM circle_reply " +
-                "WHERE deleted = 0 AND circle_id = ?;";
-
-        fetchDetailReply(json_result, sql_reply, socialgroup_id, square_item_id);
+//        String sql_reply = "SELECT comment_id,reply_id, reply_from_user_id, reply_from_user_nickname, " +
+//                "reply_to_user_id, reply_to_user_nickname, content, create_date FROM circle_reply " +
+//                "WHERE deleted = 0 AND circle_id = ?;";
+//
+//        fetchDetailReply(json_result, sql_reply, socialgroup_id, square_item_id);
 
         // 将他们都返回
         Response.responseSuccessInfo(response, json_result);
@@ -159,7 +161,7 @@ public class FetchDetail extends HttpServlet {
 
 
 
-    private void fetchDetailComment(JSONObject json_result, String sql_comment, String socialgroup_id, String square_item_id) throws SQLException {
+    private void fetchDetailCommentSql(JSONObject json_result, String sql_comment, String socialgroup_id, String square_item_id) throws SQLException {
         Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
 
         PreparedStatement stmt = conn.prepareStatement(sql_comment);
@@ -183,30 +185,30 @@ public class FetchDetail extends HttpServlet {
         rs.close();
     }
 
-    private void fetchDetailReply(JSONObject json_result, String sql_reply, String socialgroup_id, String square_item_id) throws SQLException {
-
-        Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
-
-        PreparedStatement stmt = conn.prepareStatement(sql_reply);
-        stmt.setInt(1, Integer.parseInt(square_item_id));
-        ResultSet rs = stmt.executeQuery();
-        JSONArray json_array_reply = new JSONArray();
-        while(rs.next()){
-            JSONObject json_object = new JSONObject();
-            json_object.put("comment_id", rs.getString("comment_id"));
-            json_object.put("reply_id",rs.getString("reply_id"));
-            json_object.put("reply_from_user_id", rs.getString("reply_from_user_id"));
-            json_object.put("reply_from_user_nickname", rs.getString("reply_from_user_nickname"));
-            json_object.put("reply_to_user_id", rs.getString("reply_to_user_id"));
-            json_object.put("reply_to_user_nickname", rs.getString("reply_to_user_nickname"));
-            json_object.put("content", rs.getString("content"));
-            json_object.put("create_date", rs.getString("create_date"));
-
-            json_array_reply.add(json_object);
-        }
-        json_result.put("reply", json_array_reply);
-        rs.close();
-    }
+//    private void fetchDetailReply(JSONObject json_result, String sql_reply, String socialgroup_id, String square_item_id) throws SQLException {
+//
+//        Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
+//
+//        PreparedStatement stmt = conn.prepareStatement(sql_reply);
+//        stmt.setInt(1, Integer.parseInt(square_item_id));
+//        ResultSet rs = stmt.executeQuery();
+//        JSONArray json_array_reply = new JSONArray();
+//        while(rs.next()){
+//            JSONObject json_object = new JSONObject();
+//            json_object.put("comment_id", rs.getString("comment_id"));
+//            json_object.put("reply_id",rs.getString("reply_id"));
+//            json_object.put("reply_from_user_id", rs.getString("reply_from_user_id"));
+//            json_object.put("reply_from_user_nickname", rs.getString("reply_from_user_nickname"));
+//            json_object.put("reply_to_user_id", rs.getString("reply_to_user_id"));
+//            json_object.put("reply_to_user_nickname", rs.getString("reply_to_user_nickname"));
+//            json_object.put("content", rs.getString("content"));
+//            json_object.put("create_date", rs.getString("create_date"));
+//
+//            json_array_reply.add(json_object);
+//        }
+//        json_result.put("reply", json_array_reply);
+//        rs.close();
+//    }
 
 
 
