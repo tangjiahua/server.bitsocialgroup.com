@@ -59,9 +59,9 @@ public class Fetch extends HttpServlet {
                 Class.forName(JDBC_DRIVER); //注册JDBC驱动程序，需要初始化驱动程序，这样就可以打开与数据库的通信
 
                 if(method.equals("1")){
-                    fetchNew(req, resp, square_item_type,  socialgroup_id,  square_item_id);
+                    fetchNew(req, resp,user_id, square_item_type,  socialgroup_id,  square_item_id);
                 }else if(method.equals("2")){
-                    fetchOld(req, resp, square_item_type,  socialgroup_id,  square_item_id);
+                    fetchOld(req, resp,user_id, square_item_type,  socialgroup_id,  square_item_id);
                 }else{
                     Response.responseError(resp, "fetch.java: 没有这样的method");
                 }
@@ -78,11 +78,11 @@ public class Fetch extends HttpServlet {
      * @param req
      * @param resp
      */
-    private void fetchNew(HttpServletRequest req, HttpServletResponse resp, String square_item_type, String socialgroup_id, String square_item_id) throws SQLException, ClassNotFoundException {
+    private void fetchNew(HttpServletRequest req, HttpServletResponse resp,String user_id, String square_item_type, String socialgroup_id, String square_item_id) throws SQLException, ClassNotFoundException {
         if(square_item_type.equals("broadcast")){
-            fetchNewBroadcast(req, resp,  socialgroup_id, square_item_id);
+            fetchNewBroadcast(req, resp, user_id,  socialgroup_id, square_item_id);
         }else if(square_item_type.equals("circle")){
-            fetchNewCircle(req, resp,  socialgroup_id, square_item_id);
+            fetchNewCircle(req, resp, user_id,  socialgroup_id, square_item_id);
         }
     }
 
@@ -91,11 +91,11 @@ public class Fetch extends HttpServlet {
      * @param req
      * @param resp
      */
-    private void fetchOld(HttpServletRequest req, HttpServletResponse resp, String square_item_type, String socialgroup_id, String square_item_id) throws SQLException, ClassNotFoundException {
+    private void fetchOld(HttpServletRequest req, HttpServletResponse resp,String user_id,  String square_item_type, String socialgroup_id, String square_item_id) throws SQLException, ClassNotFoundException {
         if(square_item_type.equals("broadcast")){
-            fetchOldBroadcast(req, resp,  socialgroup_id, square_item_id);
+            fetchOldBroadcast(req, resp, user_id,  socialgroup_id, square_item_id);
         }else if(square_item_type.equals("circle")){
-            fetchOldCircle(req, resp,  socialgroup_id, square_item_id);
+            fetchOldCircle(req, resp, user_id,  socialgroup_id, square_item_id);
         }
     }
 
@@ -105,24 +105,21 @@ public class Fetch extends HttpServlet {
      * @param req
      * @param resp
      */
-    private void fetchNewBroadcast(HttpServletRequest req, HttpServletResponse resp, String socialgroup_id, String square_item_id) throws SQLException, ClassNotFoundException {
+    private void fetchNewBroadcast(HttpServletRequest req, HttpServletResponse resp,String user_id,  String socialgroup_id, String square_item_id) throws SQLException, ClassNotFoundException {
         String sql = "SELECT broadcast_id, type, title, content, create_date, comment_count, like_count" +
                 ", dislike_count, picture_count FROM broadcast WHERE broadcast_id > ? AND deleted = 0 " +
                 "ORDER BY broadcast_id DESC LIMIT 50;";
-        fetchBroadcastSql(sql, resp, socialgroup_id, square_item_id);
-    }
+        String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id > ? AND deleted = 0 " +
+                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 1";
 
-    /**
-     * 拉取新的circle帖子
-     * @param req
-     * @param resp
-     */
-    private void fetchNewCircle(HttpServletRequest req, HttpServletResponse resp, String socialgroup_id, String square_item_id) throws SQLException {
-        String sql = "SELECT circle_id, circle.user_id, nickname, avatar, type, content," +
-                " create_date, comment_count, like_count, picture_count " +
-                "FROM circle, user_profile WHERE circle.user_id = user_profile.user_id " +
-                "AND circle_id > ? AND deleted = 0 ORDER BY circle_id DESC LIMIT 50;";
-        fetchCircleSql(sql,resp, socialgroup_id, square_item_id);
+        String sql_dislike = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id > ? AND deleted = 0 " +
+                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 2";
+
+        fetchBroadcastSql(sql, sql_like, sql_dislike, resp, user_id,  socialgroup_id, square_item_id);
     }
 
     /**
@@ -130,24 +127,63 @@ public class Fetch extends HttpServlet {
      * @param req
      * @param resp
      */
-    private void fetchOldBroadcast(HttpServletRequest req, HttpServletResponse resp, String socialgroup_id, String  square_item_id) throws ClassNotFoundException, SQLException {
+    private void fetchOldBroadcast(HttpServletRequest req, HttpServletResponse resp,String user_id,  String socialgroup_id, String  square_item_id) throws ClassNotFoundException, SQLException {
         String sql = "SELECT broadcast_id, type, title, content, create_date, comment_count, like_count" +
                 ", dislike_count, picture_count FROM broadcast WHERE broadcast_id < ? AND deleted = 0 " +
                 "ORDER BY broadcast_id DESC LIMIT 50;";
-       fetchBroadcastSql( sql,  resp,  socialgroup_id,  square_item_id);
+
+        String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id < ? AND deleted = 0 " +
+                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 1";
+
+        String sql_dislike = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id < ? AND deleted = 0 " +
+                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 2";
+        fetchBroadcastSql( sql, sql_like, sql_dislike, resp, user_id,  socialgroup_id,  square_item_id);
     }
+
+
+
+    /**
+     * 拉取新的circle帖子
+     * @param req
+     * @param resp
+     */
+    private void fetchNewCircle(HttpServletRequest req, HttpServletResponse resp, String user_id, String socialgroup_id, String square_item_id) throws SQLException {
+        String sql = "SELECT circle_id, circle.user_id, nickname, avatar, type, content," +
+                " create_date, comment_count, like_count, picture_count " +
+                "FROM circle, user_profile WHERE circle.user_id = user_profile.user_id " +
+                "AND circle_id > ? AND deleted = 0 ORDER BY circle_id DESC LIMIT 50;";
+
+        String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
+                "(SELECT circle_id FROM (SELECT circle_id FROM circle WHERE circle_id > ? AND deleted = 0 " +
+                "ORDER BY circle_id DESC LIMIT 50) as T)" +
+                "AND from_user_id = ? AND square_item_type = 2 AND judge_type = 1";
+
+        fetchCircleSql(sql, sql_like, resp, user_id, socialgroup_id, square_item_id);
+    }
+
+
 
     /**
      * 拉取旧的circle帖子
      * @param req
      * @param resp
      */
-    private void fetchOldCircle(HttpServletRequest req, HttpServletResponse resp, String socialgroup_id, String square_item_id) throws SQLException {
+    private void fetchOldCircle(HttpServletRequest req, HttpServletResponse resp,String user_id,  String socialgroup_id, String square_item_id) throws SQLException {
         String sql = "SELECT circle_id, circle.user_id, nickname, avatar, type, content," +
                 " create_date, comment_count, like_count, picture_count " +
                 "FROM circle, user_profile WHERE circle.user_id = user_profile.user_id " +
                 "AND circle_id < ? AND deleted = 0 ORDER BY circle_id DESC LIMIT 50;";
-        fetchCircleSql(sql, resp,  socialgroup_id,  square_item_id);
+
+        String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
+                "(SELECT circle_id FROM (SELECT circle_id FROM circle WHERE circle_id < ? AND deleted = 0 " +
+                "ORDER BY circle_id DESC LIMIT 50) as T)" +
+                "AND from_user_id = ? AND square_item_type = 2 AND judge_type = 1";
+
+        fetchCircleSql(sql, sql_like, resp, user_id,  socialgroup_id,  square_item_id);
     }
 
 
@@ -157,7 +193,10 @@ public class Fetch extends HttpServlet {
      * @param resp
      * @throws SQLException
      */
-    private void fetchBroadcastSql(String sql, HttpServletResponse resp, String socialgroup_id, String square_item_id) throws SQLException {
+    private void fetchBroadcastSql(String sql,String sql_like, String sql_dislike, HttpServletResponse resp,String user_id,  String socialgroup_id, String square_item_id) throws SQLException {
+
+        JSONObject jsonResult = new JSONObject();
+
         Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
 
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -182,7 +221,35 @@ public class Fetch extends HttpServlet {
             jsonArray.add(jsonObject);
         }
 
-        Response.responseSuccessInfo(resp, jsonArray);
+        jsonResult.put("item", jsonArray);
+
+        // 查询点赞
+        stmt = conn.prepareStatement(sql_like);
+
+        stmt.setInt(1, Integer.parseInt(square_item_id));
+        stmt.setInt(2, Integer.parseInt(user_id));
+
+        ResultSet rs_like = stmt.executeQuery();
+        String like_str = "";
+        while(rs_like.next()){
+            like_str = like_str + "@" + rs_like.getString("square_item_id");
+        }
+        jsonResult.put("like", like_str);
+
+        //查询疑惑
+        stmt = conn.prepareStatement(sql_dislike);
+
+        stmt.setInt(1, Integer.parseInt(square_item_id));
+        stmt.setInt(2, Integer.parseInt(user_id));
+
+        ResultSet rs_dislike = stmt.executeQuery();
+        String dislike_str = "";
+        while(rs_dislike.next()){
+            dislike_str = dislike_str + "@" + rs_dislike.getString("square_item_id");
+        }
+        jsonResult.put("dislike", dislike_str);
+
+        Response.responseSuccessInfo(resp, jsonResult);
         rs.close();
         stmt.close();
         conn.close();
@@ -195,7 +262,10 @@ public class Fetch extends HttpServlet {
      * @param resp
      * @throws SQLException
      */
-    private void fetchCircleSql(String sql, HttpServletResponse resp, String socialgroup_id, String square_item_id) throws SQLException {
+    private void fetchCircleSql(String sql,String sql_like, HttpServletResponse resp,String user_id,  String socialgroup_id, String square_item_id) throws SQLException {
+
+        JSONObject jsonResult = new JSONObject();
+
         Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
 
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -221,7 +291,22 @@ public class Fetch extends HttpServlet {
             jsonArray.add(jsonObject);
         }
 
-        Response.responseSuccessInfo(resp, jsonArray);
+        jsonResult.put("item", jsonArray);
+
+        // 查询点赞
+        stmt = conn.prepareStatement(sql_like);
+
+        stmt.setInt(1, Integer.parseInt(square_item_id));
+        stmt.setInt(2, Integer.parseInt(user_id));
+
+        ResultSet rs_like = stmt.executeQuery();
+        String like_str = "";
+        while(rs_like.next()){
+            like_str = like_str + "@" + rs_like.getString("square_item_id");
+        }
+        jsonResult.put("like", like_str);
+
+        Response.responseSuccessInfo(resp, jsonResult);
         rs.close();
         stmt.close();
         conn.close();
