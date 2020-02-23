@@ -73,9 +73,9 @@ public class Judge extends HttpServlet {
 
 
                 if(square_item_type.equals("broadcast")){
-                    judgeSquareItem(response, 1, socialgroup_id, judge_type, square_item_id, user_id);
+                    judgeSquareItem(response, 1, socialgroup_id, judge_type, square_item_id, user_id, is_to_cancel);
                 }else if(square_item_type.equals("circle")){
-                    judgeSquareItem(response, 2, socialgroup_id, judge_type, square_item_id, user_id);
+                    judgeSquareItem(response, 2, socialgroup_id, judge_type, square_item_id, user_id, is_to_cancel);
                 }else{
                     Response.responseError(response, "judge.java square_item_type 不正确");
                 }
@@ -86,32 +86,60 @@ public class Judge extends HttpServlet {
         }
     }
 
-    private void judgeSquareItem(HttpServletResponse response, Integer square_item_type_db, String socialgroup_id, String judge_type, String square_item_id, String user_id) throws ClassNotFoundException, SQLException {
+    private void judgeSquareItem(HttpServletResponse response, Integer square_item_type_db,
+                                 String socialgroup_id, String judge_type, String square_item_id, String user_id, String is_to_cancel) throws SQLException {
         Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
 
+        if(is_to_cancel.equals("0")){
+            String sql = "INSERT INTO judge(judge_type, square_item_type, square_item_id, from_user_id, " +
+                    "canceled, create_date) VALUES (?, ?, ?, ?, 0, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
-        String sql = "INSERT INTO judge(judge_type, square_item_type, square_item_id, from_user_id, " +
-                "canceled, create_date) VALUES (?, ?, ?, ?, 0, ?)";
-         PreparedStatement stmt = conn.prepareStatement(sql);
+
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateStr = format.format(date);
+            stmt.setInt(1, Integer.parseInt(judge_type));
+            stmt.setInt(2, square_item_type_db);
+            stmt.setInt(3, Integer.parseInt(square_item_id));
+            stmt.setInt(4, Integer.parseInt(user_id));
+            stmt.setString(5, dateStr);
+
+            int result = stmt.executeUpdate();
+
+            if(result == 1){
+                Response.responseSuccessInfo(response, "成功judge");
+            }
+
+            stmt.close();
+            conn.close();
+        }else{
+            String sql = "DELETE FROM judge WHERE judge_type = ? AND square_item_type = ? AND square_item_id = ? AND " +
+                    "from_user_id = ?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
 
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = format.format(date);
-        stmt.setInt(1, Integer.parseInt(judge_type));
-        stmt.setInt(2, square_item_type_db);
-        stmt.setInt(3, Integer.parseInt(square_item_id));
-        stmt.setInt(4, Integer.parseInt(user_id));
-        stmt.setString(5, dateStr);
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateStr = format.format(date);
+            stmt.setInt(1, Integer.parseInt(judge_type));
+            stmt.setInt(2, square_item_type_db);
+            stmt.setInt(3, Integer.parseInt(square_item_id));
+            stmt.setInt(4, Integer.parseInt(user_id));
 
-        int result = stmt.executeUpdate();
+            int result = stmt.executeUpdate();
 
-        if(result == 1){
-            Response.responseSuccessInfo(response, "成功judge");
+            if(result == 1){
+                Response.responseSuccessInfo(response, "成功judge");
+            }
+
+            stmt.close();
+            conn.close();
+
         }
 
-        stmt.close();
-        conn.close();
+
+
 
     }
 
