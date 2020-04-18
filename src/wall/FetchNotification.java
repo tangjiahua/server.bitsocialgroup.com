@@ -125,6 +125,8 @@ public class FetchNotification extends HttpServlet {
 
         json_result.put("poster", json_array);
 
+        
+
         Response.responseSuccessInfo(response, json_result);
     }
 }

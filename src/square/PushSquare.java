@@ -99,7 +99,8 @@ public class PushSquare extends HttpServlet {
                     // 普通的表单类型，代表是json格式的字符串
                     String fieldName = item.getFieldName();
                     if(fieldName.equals("json")){
-                        String jsonStr = item.getString();
+                        String jsonStr = item.getString("UTF-8");
+
                         jsonObject = JSONObject.fromObject(jsonStr);
 
                         socialgroup_id = jsonObject.getString("socialgroup_id");
@@ -194,7 +195,7 @@ public class PushSquare extends HttpServlet {
         String thumbnailFileDirPath = Util.RESOURCE_URL + "socialgroup_"
                 + socialgroup_id + "/square/" + square_item_type + "/thumbnail";
         ImgCompress compressor = new ImgCompress(fileDirPath + "/" + fileName);
-        compressor.resizeFix(300, 300, thumbnailFileDirPath + "/" + fileName);
+        compressor.resizeFix(600, 600, thumbnailFileDirPath + "/" + fileName);
 
         //更新数据对应条目的状态 delete = 0
         return true;
