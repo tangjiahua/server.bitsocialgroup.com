@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,10 +69,17 @@ public class PushPoster extends HttpServlet {
                         // 普通的表单类型
                         String fieldName = item.getFieldName();
                         if(fieldName.equals("json")){
-                            String jsonStr = item.getString();
+                            String jsonStr = item.getString("UTF-8");
                             JSONObject jsonObject = JSONObject.fromObject(jsonStr);
 
                             socialgroup_id = jsonObject.getString("socialgroup_id");
+
+//                            brief = URLDecoder.decode(jsonObject.getString("brief"), "utf-8");
+//                            welcome = URLDecoder.decode(jsonObject.getString("welcome"), "utf-8");
+//                            hold_date = URLDecoder.decode(jsonObject.getString("hold_date"), "utf-8");
+//                            hold_location = URLDecoder.decode(jsonObject.getString("hold_location"), "utf-8");
+//                            holder = URLDecoder.decode(jsonObject.getString("holder"), "utf-8");
+//                            detail = URLDecoder.decode(jsonObject.getString("detail"), "utf-8");
 
                             brief = jsonObject.getString("brief");
                             welcome = jsonObject.getString("welcome");
@@ -79,6 +87,8 @@ public class PushPoster extends HttpServlet {
                             hold_location = jsonObject.getString("hold_location");
                             holder = jsonObject.getString("holder");
                             detail = jsonObject.getString("detail");
+
+
                             link = jsonObject.getString("link");
                             user_id = jsonObject.getString("user_id");
                             password = jsonObject.getString("password");
