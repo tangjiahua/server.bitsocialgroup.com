@@ -1,4 +1,5 @@
-package square;
+package discover.mypost;
+
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -12,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
 
-@WebServlet("/square/fetch")
-public class Fetch extends HttpServlet {
+@WebServlet("/discover/mypost/fetch_my_post")
+public class FetchMyPost extends HttpServlet {
 
     private static String JDBC_DRIVER = Sql.GLOBAL_JDBC_DRIVER;
     private static String DB_URL = Sql.GLOBAL_DB_URL;
@@ -106,18 +107,20 @@ public class Fetch extends HttpServlet {
      * @param resp
      */
     private void fetchNewBroadcast(HttpServletRequest req, HttpServletResponse resp,String user_id,  String socialgroup_id, String square_item_id) throws SQLException, ClassNotFoundException {
+//        String sql = "SELECT broadcast_id, type, title, content, create_date, comment_count, like_count" +
+//                ", dislike_count, picture_count FROM broadcast WHERE broadcast_id > ? AND deleted = 0 " +
+//                "ORDER BY broadcast_id DESC LIMIT 50;";
         String sql = "SELECT broadcast_id, type, title, content, create_date, comment_count, like_count" +
-                ", dislike_count, picture_count FROM broadcast WHERE broadcast_id > ? AND deleted = 0 " +
-                "ORDER BY broadcast_id DESC LIMIT 50;";
-        // sql_like为了看到"我"点过的赞有哪些
+                ", dislike_count, picture_count FROM broadcast WHERE broadcast_id > ? AND deleted = 0 AND user_id = ?" +
+                " ORDER BY broadcast_id DESC LIMIT 10;";
         String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
-                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id > ? AND deleted = 0 " +
-                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id > ? AND deleted = 0 AND user_id = ?" +
+                " ORDER BY broadcast_id DESC LIMIT 10) as T)" +
                 "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 1";
 
         String sql_dislike = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
-                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id > ? AND deleted = 0 " +
-                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id > ? AND deleted = 0 AND user_id = ? " +
+                "ORDER BY broadcast_id DESC LIMIT 10) as T)" +
                 "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 2";
 
         fetchBroadcastSql(sql, sql_like, sql_dislike, resp, user_id,  socialgroup_id, square_item_id);
@@ -130,18 +133,17 @@ public class Fetch extends HttpServlet {
      */
     private void fetchOldBroadcast(HttpServletRequest req, HttpServletResponse resp,String user_id,  String socialgroup_id, String  square_item_id) throws ClassNotFoundException, SQLException {
         String sql = "SELECT broadcast_id, type, title, content, create_date, comment_count, like_count" +
-                ", dislike_count, picture_count FROM broadcast WHERE broadcast_id < ? AND deleted = 0 " +
-                "ORDER BY broadcast_id DESC LIMIT 50;";
+                ", dislike_count, picture_count FROM broadcast WHERE broadcast_id < ? AND deleted = 0 AND user_id = ?" +
+                " ORDER BY broadcast_id DESC LIMIT 10;";
 
-        // sql_like指的是
         String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
-                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id < ? AND deleted = 0 " +
-                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id < ? AND deleted = 0 AND user_id = ?" +
+                " ORDER BY broadcast_id DESC LIMIT 10) as T)" +
                 "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 1";
 
         String sql_dislike = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
-                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id < ? AND deleted = 0 " +
-                "ORDER BY broadcast_id DESC LIMIT 50) as T)" +
+                "(SELECT broadcast_id FROM (SELECT broadcast_id FROM broadcast WHERE broadcast_id < ? AND deleted = 0 AND user_id = ? " +
+                "ORDER BY broadcast_id DESC LIMIT 10) as T)" +
                 "AND from_user_id = ? AND square_item_type = 1 AND judge_type = 2";
         fetchBroadcastSql( sql, sql_like, sql_dislike, resp, user_id,  socialgroup_id,  square_item_id);
     }
@@ -155,13 +157,13 @@ public class Fetch extends HttpServlet {
      */
     private void fetchNewCircle(HttpServletRequest req, HttpServletResponse resp, String user_id, String socialgroup_id, String square_item_id) throws SQLException {
         String sql = "SELECT circle_id, circle.user_id, nickname, avatar, type, content," +
-                " create_date, comment_count, like_count, picture_count " +
-                "FROM circle, user_profile WHERE circle.user_id = user_profile.user_id " +
-                "AND circle_id > ? AND deleted = 0 ORDER BY circle_id DESC LIMIT 50;";
+                " create_date, comment_count, like_count, picture_count" +
+                " FROM circle, user_profile WHERE circle.user_id = user_profile.user_id" +
+                " AND circle_id > ? AND deleted = 0 AND circle.user_id = ? ORDER BY circle_id DESC LIMIT 10;";
 
         String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
-                "(SELECT circle_id FROM (SELECT circle_id FROM circle WHERE circle_id > ? AND deleted = 0 " +
-                "ORDER BY circle_id DESC LIMIT 50) as T)" +
+                "(SELECT circle_id FROM (SELECT circle_id FROM circle WHERE circle_id > ? AND deleted = 0 AND circle.user_id = ? " +
+                "ORDER BY circle_id DESC LIMIT 10) as T)" +
                 "AND from_user_id = ? AND square_item_type = 2 AND judge_type = 1";
 
         fetchCircleSql(sql, sql_like, resp, user_id, socialgroup_id, square_item_id);
@@ -176,13 +178,13 @@ public class Fetch extends HttpServlet {
      */
     private void fetchOldCircle(HttpServletRequest req, HttpServletResponse resp,String user_id,  String socialgroup_id, String square_item_id) throws SQLException {
         String sql = "SELECT circle_id, circle.user_id, nickname, avatar, type, content," +
-                " create_date, comment_count, like_count, picture_count " +
-                "FROM circle, user_profile WHERE circle.user_id = user_profile.user_id " +
-                "AND circle_id < ? AND deleted = 0 ORDER BY circle_id DESC LIMIT 50;";
+                " create_date, comment_count, like_count, picture_count" +
+                " FROM circle, user_profile WHERE circle.user_id = user_profile.user_id" +
+                " AND circle_id < ? AND deleted = 0 AND circle.user_id = ? ORDER BY circle_id DESC LIMIT 10;";
 
         String sql_like = "SELECT square_item_id FROM judge WHERE square_item_id IN " +
-                "(SELECT circle_id FROM (SELECT circle_id FROM circle WHERE circle_id < ? AND deleted = 0 " +
-                "ORDER BY circle_id DESC LIMIT 50) as T)" +
+                "(SELECT circle_id FROM (SELECT circle_id FROM circle WHERE circle_id < ? AND deleted = 0 AND circle.user_id = ? " +
+                "ORDER BY circle_id DESC LIMIT 10) as T)" +
                 "AND from_user_id = ? AND square_item_type = 2 AND judge_type = 1";
 
         fetchCircleSql(sql, sql_like, resp, user_id,  socialgroup_id,  square_item_id);
@@ -205,6 +207,7 @@ public class Fetch extends HttpServlet {
 
         // 设置参数
         stmt.setInt(1, Integer.parseInt(square_item_id));
+        stmt.setInt(2, Integer.parseInt(user_id));
 
         // 执行
         ResultSet rs = stmt.executeQuery();
@@ -230,6 +233,7 @@ public class Fetch extends HttpServlet {
 
         stmt.setInt(1, Integer.parseInt(square_item_id));
         stmt.setInt(2, Integer.parseInt(user_id));
+        stmt.setInt(3, Integer.parseInt(user_id));
 
         ResultSet rs_like = stmt.executeQuery();
         String like_str = "";
@@ -243,6 +247,7 @@ public class Fetch extends HttpServlet {
 
         stmt.setInt(1, Integer.parseInt(square_item_id));
         stmt.setInt(2, Integer.parseInt(user_id));
+        stmt.setInt(3, Integer.parseInt(user_id));
 
         ResultSet rs_dislike = stmt.executeQuery();
         String dislike_str = "";
@@ -274,6 +279,7 @@ public class Fetch extends HttpServlet {
 
         // 设置参数
         stmt.setInt(1, Integer.parseInt(square_item_id));
+        stmt.setInt(2, Integer.parseInt(user_id));
 
         // 执行
         ResultSet rs = stmt.executeQuery();
@@ -300,6 +306,7 @@ public class Fetch extends HttpServlet {
 
         stmt.setInt(1, Integer.parseInt(square_item_id));
         stmt.setInt(2, Integer.parseInt(user_id));
+        stmt.setInt(3, Integer.parseInt(user_id));
 
         ResultSet rs_like = stmt.executeQuery();
         String like_str = "";
@@ -314,3 +321,4 @@ public class Fetch extends HttpServlet {
         conn.close();
     }
 }
+

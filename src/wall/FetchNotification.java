@@ -75,19 +75,19 @@ public class FetchNotification extends HttpServlet {
 
     private void fetchNewNotification(HttpServletResponse response, String socialgroup_id, String notification_id) throws SQLException {
 
-        String sql = "SELECT notification.notification_id, user_id, user_nickname, user_avatar, type, create_date, brief, welcome, " +
-                "hold_date, hold_location, holder, detail, link FROM notification, notification_poster " +
-                "WHERE notification.notification_id = notification_poster.notification_id " +
-                "AND notification.notification_id > ? AND deleted = 0 ORDER BY notification_id DESC LIMIT 10;";
+        String sql = "SELECT notification.notification_id, notification.user_id, user_profile.nickname as user_nickname, user_profile.avatar as user_avatar, type, create_date, brief, welcome," +
+                " hold_date, hold_location, holder, detail, link FROM notification, notification_poster, user_profile" +
+                " WHERE notification.notification_id = notification_poster.notification_id" +
+                " AND notification.notification_id > ? AND deleted = 0 AND user_profile.user_id = notification.user_id ORDER BY notification_id DESC LIMIT 10;";
         fetchNotificationSql(response, sql, socialgroup_id, notification_id);
 
     }
 
     private void fetchOldNotification(HttpServletResponse response, String socialgroup_id, String notification_id) throws SQLException {
-        String sql = "SELECT notification.notification_id, user_id, user_nickname, user_avatar, type, create_date, brief, welcome, " +
-                "hold_date, hold_location, holder, detail, link FROM notification, notification_poster " +
-                "WHERE notification.notification_id = notification_poster.notification_id " +
-                "AND notification.notification_id < ? AND deleted = 0 ORDER BY notification_id DESC LIMIT 10;";
+        String sql = "SELECT notification.notification_id, notification.user_id, user_profile.nickname as user_nickname, user_profile.avatar as user_avatar, type, create_date, brief, welcome," +
+                " hold_date, hold_location, holder, detail, link FROM notification, notification_poster, user_profile" +
+                " WHERE notification.notification_id = notification_poster.notification_id" +
+                " AND notification.notification_id < ? AND deleted = 0 AND user_profile.user_id = notification.user_id ORDER BY notification_id DESC LIMIT 10;";
         fetchNotificationSql(response, sql, socialgroup_id, notification_id);
     }
 

@@ -56,7 +56,7 @@ public class FetchDetailReply extends HttpServlet {
                 switch(square_item_type){
                     case "broadcast":{
                         String sql_broadcast_reply = "SELECT reply_id, reply_from_user_id, nickname," +
-                                " avatar, reply_to_user_id, reply_to_user_nickname, content," +
+                                " avatar, reply_to_user_id, user_profile.nickname as reply_to_user_nickname, content," +
                                 " create_date FROM broadcast_reply, user_profile " +
                                 " WHERE deleted = 0 AND broadcast_id = ? AND broadcast_reply.reply_from_user_id = user_profile.user_id" +
                                 " AND comment_id = ?";
@@ -70,7 +70,7 @@ public class FetchDetailReply extends HttpServlet {
 
                     case "circle":{
                         String sql_circle_reply = "SELECT reply_id, reply_from_user_id, nickname," +
-                                " avatar, reply_to_user_id, reply_to_user_nickname, content," +
+                                " avatar, reply_to_user_id, user_profile.nickname as reply_to_user_nickname, content," +
                                 " create_date FROM circle_reply, user_profile " +
                                 " WHERE deleted = 0 AND circle_id = ? AND circle_reply.reply_from_user_id = user_profile.user_id" +
                                 " AND comment_id = ?";
