@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -289,6 +290,15 @@ public class PushPoster extends HttpServlet {
         // 保存压缩后的图
         ImgCompress compressor = new ImgCompress(fileDirPath + "/" + fileName);
         compressor.resizeFix(1000, 1000, fileDirPath + "/" + fileName);
+
+        File compressedFile = new File(fileDirPath + "/" + fileName);
+        FileInputStream compressedFileInputStream = new FileInputStream(compressedFile);
+        if(FtpUtil.uploadFileApi("socialgroup_" + socialgroup_id + "/wall/poster",
+                fileName, compressedFileInputStream)){
+            compressedFile.delete();
+            file.delete();
+        }
+        compressedFileInputStream.close();
 
         //更新数据对应条目的状态 delete = 0
         return updateStatusInDataBase(socialgroup_id, notification_id);

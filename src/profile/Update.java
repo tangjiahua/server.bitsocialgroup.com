@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
@@ -160,9 +161,25 @@ public class Update extends HttpServlet {
                                         ImgCompress compressor = new ImgCompress(newAvatarDirPath + "/" + newFileName);
                                         compressor.resizeFix(150, 150, newThumbnailDirPath + "/" + newFileName);
                                         // 保存完毕，现在将原头像也压缩一下
-                                        ImgCompress compressorAvatar = new ImgCompress(newAvatarDirPath + "/" + newFileName);
+
                                         compressor.resizeFix(1000, 1000, newAvatarDirPath + "/" + newFileName);
                                         rs.close();
+
+                                        // 上传avatar和thumbnail到文件服务器
+                                        File avatar = new File(newAvatarDirPath + "/" + newFileName);
+                                        File thumbnail = new File(newThumbnailDirPath + "/" + newFileName);
+                                        FileInputStream avatarInputStream = new FileInputStream(avatar);
+                                        FileInputStream thumbnailInputStream = new FileInputStream(thumbnail);
+                                        if(FtpUtil.uploadFileApi("socialgroup_" + socialgroup_id + "/profile/avatar", newFileName, avatarInputStream)){
+                                            if(FtpUtil.uploadFileApi("socialgroup_" + socialgroup_id + "/profile/avatar/thumbnail", newFileName, thumbnailInputStream)){
+                                                avatar.delete();
+                                                thumbnail.delete();
+                                            }
+                                        }
+                                        avatarInputStream.close();
+                                        thumbnailInputStream.close();
+
+
 
                                         // 现在将数据插入数据库
                                         String sql2 = "UPDATE user_profile SET avatar = ? WHERE user_id = ?;";
@@ -180,11 +197,11 @@ public class Update extends HttpServlet {
                                             Response.responseError(response, "update.java 将数据avatar插入数据库失败");
                                             return;
                                         }
-
+                                        Response.responseSuccessInfo(response, "成功更换头像");
                                         // 所有工作完成
                                         stmt.close();
                                         conn.close();
-                                        Response.responseSuccessInfo(response, "成功更换头像");
+
                                     } else {
                                         Response.responseError(response, "update.java: 更改头像却在user_profile查不到user_id对应的avatar");
                                     }
@@ -222,6 +239,17 @@ public class Update extends HttpServlet {
                                         // 保存完毕，现在将wall picture压缩一下
                                         ImgCompress compressor = new ImgCompress(newBackgroundDirPath + "/" + newFileName);
                                         compressor.resizeFix(2000, 2000, newBackgroundDirPath + "/" + newFileName);
+
+
+                                        // 上传background到文件服务器
+                                        File background = new File(newBackgroundDirPath + "/" + newFileName);
+                                        FileInputStream backgroundInputStream = new FileInputStream(background);
+                                        if(FtpUtil.uploadFileApi("socialgroup_" + socialgroup_id + "/profile/background",
+                                                newFileName, backgroundInputStream)){
+                                            background.delete();
+                                        }
+                                        backgroundInputStream.close();
+
 
                                         rs.close();
                                         // 现在将数据插入数据库
@@ -278,8 +306,24 @@ public class Update extends HttpServlet {
                                     ImgCompress compressor = new ImgCompress(newWallDirPath + "/" + newFileName);
                                     compressor.resizeFix(1000, 1000, newWallDirPath + "/" + newFileName);
 
-                                    // 保存完毕，现在将原头像也压缩一下
+                                    // 保存完毕，现在将wall thumbnail也压缩一下
                                     compressor.resizeFix(500, 500, newWallThumbnailDirPath + "/" + newFileName);
+
+
+                                    //
+                                    File wall = new File(newWallDirPath + "/" + newFileName);
+                                    File wallThumbnail = new File(newWallThumbnailDirPath + "/" + newFileName);
+                                    FileInputStream wallInputStream = new FileInputStream(wall);
+                                    FileInputStream wallThumbnailInputStream = new FileInputStream(wallThumbnail);
+                                    if(FtpUtil.uploadFileApi("socialgroup_" + socialgroup_id + "/profile/wall", newFileName, wallInputStream)){
+                                        if(FtpUtil.uploadFileApi("socialgroup_" + socialgroup_id + "/profile/wall/thumbnail", newFileName, wallThumbnailInputStream)){
+                                            wall.delete();
+                                            wallThumbnail.delete();
+                                        }
+                                    }
+                                    wallInputStream.close();
+                                    wallThumbnailInputStream.close();
+
 
 
                                     if (new_wall_picture_count == tmpNum) {
@@ -389,30 +433,51 @@ public class Update extends HttpServlet {
                                 int pic_count = rs.getInt("wall_picture_count");
                                 if(pic_count >= delete){
                                     // 首先将本地的图片命名改变一下
-                                    String localUrl = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/wall/";
-                                    String localThumUrl = localUrl + "thumbnail/";
-
-                                    String deleteFilePath = localUrl + user_id + "@" + delete + ".jpg";
-                                    String deleteThumbFilePath = localThumUrl + user_id + "@" + delete + ".jpg";
+//                                    String localUrl = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/wall/";
+//                                    String localThumUrl = localUrl + "thumbnail/";
+                                    String wallPicturePath = "socialgroup_" + socialgroup_id + "/profile/wall";
+                                    String wallPictureFileName = user_id + "@" + delete + ".jpg";
+                                    String wallThumbnailPath = "socialgroup_" + socialgroup_id + "/profile/wall/" + "thumbnail";
+                                    String wallThumbnailFileName =  user_id + "@" + delete + ".jpg";
+//                                    String deleteFilePath = localUrl + user_id + "@" + delete + ".jpg";
+//                                    String deleteThumbFilePath = localThumUrl + user_id + "@" + delete + ".jpg";
                                     //先删除图片
-                                    File deleteFile = new File(deleteFilePath);
-                                    File deleteThumbFile = new File(deleteThumbFilePath);
-                                    deleteThumbFile.delete();
-                                    deleteFile.delete();
+                                    FtpUtil.deleteFileApi(wallPicturePath, wallPictureFileName);
+                                    FtpUtil.deleteFileApi(wallThumbnailPath, wallThumbnailFileName);
+
+
+//                                    File deleteFile = new File(deleteFilePath);
+//                                    File deleteThumbFile = new File(deleteThumbFilePath);
+//                                    deleteThumbFile.delete();
+//                                    deleteFile.delete();
+
+
                                     //将其他图片改名
                                     for(int i = delete + 1; i <= pic_count; i++){
-                                        String newFilePath = localUrl + user_id + "@" + (i-1) + ".jpg";
-                                        String oldFilePath = localUrl + user_id + "@" + i + ".jpg";
-                                        String newThumbFilePath = localThumUrl + user_id + "@" + (i-1) + ".jpg";
-                                        String oldThumbFilePath = localThumUrl + user_id + "@" + i + ".jpg";
+
+                                        String newWallPictureFileName = user_id + "@" + (i-1) + ".jpg";
+                                        String newWallThumbnailFileName = user_id + "@" + (i-1) + ".jpg";
+                                        String oldWallPictureFileName = user_id + "@" + i + ".jpg";
+                                        String oldWallThumbnailFileName = user_id + "@" + i + ".jpg";
+
+//                                        FtpUtil.renameFileApi(wallPicturePath, wallPictureFileName, newWallPictureFileName);
+//                                        FtpUtil.renameFileApi(wallThumbnailPath, wallThumbnailFileName, newWallThumbnailFileName);
 
 
-                                        File oldFile = new File(oldFilePath);
-                                        File newFile = new File(newFilePath);
-                                        File oldThumbFile = new File(oldThumbFilePath);
-                                        File newThumbFile = new File(newThumbFilePath);
+//                                        String newFilePath = localUrl + user_id + "@" + (i-1) + ".jpg";
+//                                        String oldFilePath = localUrl + user_id + "@" + i + ".jpg";
+//                                        String newThumbFilePath = localThumUrl + user_id + "@" + (i-1) + ".jpg";
+//                                        String oldThumbFilePath = localThumUrl + user_id + "@" + i + ".jpg";
+//
+//
+//                                        File oldFile = new File(oldFilePath);
+//                                        File newFile = new File(newFilePath);
+//                                        File oldThumbFile = new File(oldThumbFilePath);
+//                                        File newThumbFile = new File(newThumbFilePath);
 
-                                        if(oldFile.renameTo(newFile) && oldThumbFile.renameTo(newThumbFile)){
+                                        if(FtpUtil.renameFileApi(wallPicturePath, oldWallPictureFileName, newWallPictureFileName) &&
+                                            FtpUtil.renameFileApi(wallThumbnailPath, oldWallThumbnailFileName, newWallThumbnailFileName)
+                                            ){
                                             rs.close();
                                         }else{
                                             Response.responseError(response, "Update.java: 删除照片墙图片时更改命名失败");

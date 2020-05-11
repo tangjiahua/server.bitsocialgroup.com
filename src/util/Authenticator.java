@@ -22,6 +22,21 @@ public class Authenticator {
         return privateAuthenticate(user_id, password);
     }
 
+    public static Boolean deleteAuthenticate(String user_id, String password)throws SQLException, ClassNotFoundException {
+        return privateDeleteAutenticate(user_id, password);
+    }
+
+
+    private static Boolean privateDeleteAutenticate(String user_id, String password)throws SQLException, ClassNotFoundException {
+        Jedis jedis = RedisUtil.getJedis();
+
+        assert jedis != null;
+        if(jedis.exists(user_id)){
+            jedis.del(user_id);
+            jedis.close();
+        }
+        return true;
+    }
 
     private static Boolean privateAuthenticate(String user_id, String password) throws ClassNotFoundException, SQLException {
 

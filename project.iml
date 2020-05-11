@@ -23,5 +23,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 9.0.26" level="application_server_libraries" />
     <orderEntry type="library" name="JarLibrary" level="project" />
+    <orderEntry type="library" name="JarLibrary1" level="project" />
   </component>
 </module>

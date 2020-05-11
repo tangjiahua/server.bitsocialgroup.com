@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.text.FieldPosition;
@@ -191,11 +192,29 @@ public class PushSquare extends HttpServlet {
         item.write(file);
         item.delete();
 
+        //上传到文件服务器
+        FileInputStream in = new FileInputStream(file);
+        if(FtpUtil.uploadFileApi("socialgroup_"
+                + socialgroup_id + "/square/" + square_item_type + "/picture", fileName, in)){
+        }
+        in.close();
+
+
         // 保存缩略图
         String thumbnailFileDirPath = Util.RESOURCE_URL + "socialgroup_"
                 + socialgroup_id + "/square/" + square_item_type + "/thumbnail";
         ImgCompress compressor = new ImgCompress(fileDirPath + "/" + fileName);
         compressor.resizeFix(600, 600, thumbnailFileDirPath + "/" + fileName);
+
+        //上传到文件服务器
+        File thumbnailfile = new File(thumbnailFileDirPath, fileName);
+        FileInputStream in_thumbnail = new FileInputStream(thumbnailfile);
+        if(FtpUtil.uploadFileApi("socialgroup_"
+                + socialgroup_id + "/square/" + square_item_type + "/thumbnail", fileName, in_thumbnail)){
+            thumbnailfile.delete();
+            file.delete();
+        }
+        in_thumbnail.close();
 
         //更新数据对应条目的状态 delete = 0
         return true;
