@@ -186,9 +186,16 @@ public class PushSquare extends HttpServlet {
         String fileDirPath = Util.RESOURCE_URL + "socialgroup_"
                 + socialgroup_id + "/square/" + square_item_type + "/picture";
         File file = new File(fileDirPath, fileName);
-        if(!file.exists()){
-            file.createNewFile();
+
+
+        if (!file.getParentFile().exists()&&!file.isDirectory()){
+            file.getParentFile().mkdirs();
         }
+        file.createNewFile();
+//
+//        if(!file.exists()){
+//            file.createNewFile();
+//        }
         item.write(file);
         item.delete();
 

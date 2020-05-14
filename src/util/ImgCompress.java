@@ -64,6 +64,11 @@ public class ImgCompress {
         BufferedImage image = new BufferedImage(w, h,BufferedImage.TYPE_INT_RGB );
         image.getGraphics().drawImage(img, 0, 0, w, h, null); // 绘制缩小后的图
         File destFile = new File(addr);
+
+        if (!destFile.getParentFile().exists()&&!destFile.isDirectory()){
+            destFile.getParentFile().mkdirs();
+        }
+
         FileOutputStream out = new FileOutputStream(destFile); // 输出到文件流
         // 可以正常实现bmp、png、gif转jpg
 //        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);

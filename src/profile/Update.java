@@ -151,9 +151,13 @@ public class Update extends HttpServlet {
                                         String newFileName = user_id + "@" + newCount + ".jpg";
                                         String newAvatarDirPath = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/avatar";
                                         File file = new File(newAvatarDirPath, newFileName);
-                                        if (!file.exists()) {
-                                            file.createNewFile();
+//                                        if (!file.exists()) {
+//                                            file.createNewFile();
+//                                        }
+                                        if (!file.getParentFile().exists()&&!file.isDirectory()){
+                                            file.getParentFile().mkdirs();
                                         }
+                                        file.createNewFile();
                                         item.write(file);
                                         item.delete();
                                         // 保存完毕，现在将头像的thumbnail也保存一下
@@ -230,9 +234,13 @@ public class Update extends HttpServlet {
                                         String newFileName = user_id + "@" + newCount + ".jpg";
                                         String newBackgroundDirPath = Util.RESOURCE_URL + "socialgroup_" + socialgroup_id + "/profile/background";
                                         File file = new File(newBackgroundDirPath, newFileName);
-                                        if (!file.exists()) {
-                                            file.createNewFile();
+//                                        if (!file.exists()) {
+//                                            file.createNewFile();
+//                                        }
+                                        if (!file.getParentFile().exists()&&!file.isDirectory()){
+                                            file.getParentFile().mkdirs();
                                         }
+                                        file.createNewFile();
                                         item.write(file);
                                         item.delete();
 
@@ -296,9 +304,13 @@ public class Update extends HttpServlet {
                                     String newWallThumbnailDirPath = newWallDirPath + "/thumbnail";
 
                                     File file = new File(newWallDirPath, newFileName);
-                                    if (!file.exists()) {
-                                        file.createNewFile();
+//                                    if (!file.exists()) {
+//                                        file.createNewFile();
+//                                    }
+                                    if (!file.getParentFile().exists()&&!file.isDirectory()){
+                                        file.getParentFile().mkdirs();
                                     }
+                                    file.createNewFile();
                                     item.write(file);
                                     item.delete();
 

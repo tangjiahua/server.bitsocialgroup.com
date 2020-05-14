@@ -278,9 +278,13 @@ public class PushPosterByUser extends HttpServlet {
         String fileName = notification_id + ".jpg";
 
         File file = new File(fileDirPath, fileName);
-        if(!file.exists()){
-            file.createNewFile();
+//        if(!file.exists()){
+//            file.createNewFile();
+//        }
+        if (!file.getParentFile().exists()&&!file.isDirectory()){
+            file.getParentFile().mkdirs();
         }
+        file.createNewFile();
         item.write(file);
         item.delete();
 
