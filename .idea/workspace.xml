@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6b9cd80-8f13-4151-b88b-4447c31a564b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/JarLibrary1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/profile/ChangePassword.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/FtpUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/wall/PushPosterByUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/discover/message/FetchPushMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/discover/message/FetchPushMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/profile/Update.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/profile/Update.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/square/PushSquare.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/square/PushSquare.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Authenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Authenticator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/wall/PushPoster.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/wall/PushPoster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/discover/message/FetchPushMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/discover/message/FetchPushMessage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/profile/Update.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/profile/Update.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/square/PushSquare.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/square/PushSquare.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/util/Authenticator.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/util/Authenticator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/classes/wall/PushPoster.class" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/classes/wall/PushPoster.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -396,6 +383,11 @@
           <url>file://$PROJECT_DIR$/src/util/FtpUtil.java</url>
           <line>250</line>
           <option name="timeStamp" value="157" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/square/FetchDetail.java</url>
+          <line>112</line>
+          <option name="timeStamp" value="158" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
