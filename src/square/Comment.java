@@ -9,10 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -78,7 +75,7 @@ public class Comment extends HttpServlet {
 
     private void commentSquareItem(HttpServletResponse response, String square_item_type, String socialgroup_id, String square_item_id, String user_id, String content) throws SQLException, ClassNotFoundException {
 
-        String sql = "INSERT INTO " + square_item_type + "_comment( " + square_item_type +"_id, user_id, deleted, content, " +
+        String sql = "INSERT INTO " + square_item_type + "_comment( " + square_item_type + "_id, user_id, deleted, content, " +
                 "create_date, reply_count) VALUES (?, ?, 0, ?, ?, 0)";
         Connection conn = DriverManager.getConnection(DB_URL + DB_NAME_SG + socialgroup_id, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -101,11 +98,27 @@ public class Comment extends HttpServlet {
             Response.responseError(response, "评论失败");
         }
 
-        PushMessage.pushCommentMessage(socialgroup_id, user_id, square_item_type, square_item_id);
+
+        //发布推送消息
+
+        String pushSql = "SELECT user_id FROM " + square_item_type + " WHERE " + square_item_type + "_id = ?";
+        stmt = conn.prepareStatement(pushSql);
+        stmt.setInt(1, Integer.parseInt(square_item_id));
+        ResultSet resultSet = stmt.executeQuery();
+
+        if(resultSet.next()){
+            String comment_to_user_id;
+            comment_to_user_id = resultSet.getString("user_id");
+            PushMessage.pushCommentMessage(socialgroup_id, comment_to_user_id, square_item_type, square_item_id);
+        }
+
+
 
         stmt.close();
         conn.close();
     }
+
+
 
 
 }
