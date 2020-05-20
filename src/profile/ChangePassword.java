@@ -53,8 +53,9 @@ public class ChangePassword extends HttpServlet {
                     conn = DriverManager.getConnection(DB_URL + DB_NAME_SGS, USER, PASS);//创建一个Connection对象，代表数据库的物理连接
                     stmt = conn.prepareStatement(insert_sql);
 
+                    String new_passwordMD5 = Util.stringToMD5(new_password);
 
-                    stmt.setString(1, new_password);
+                    stmt.setString(1, new_passwordMD5);
                     stmt.setInt(2, Integer.valueOf(user_id));
 
                     int result = stmt.executeUpdate();

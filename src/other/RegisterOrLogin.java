@@ -73,9 +73,9 @@ public class RegisterOrLogin extends  HttpServlet {
                             String insert_sql = "INSERT INTO user(account, password, device_type) VALUES" +
                                     "(?, ?, ?);";
                             stmt = conn.prepareStatement(insert_sql);
-
+                            String passwordMD5 = Util.stringToMD5(password);
                             stmt.setString(1, account);
-                            stmt.setString(2, password);
+                            stmt.setString(2, passwordMD5);
                             stmt.setString(3, device_type);
 
                             int result = stmt.executeUpdate();
@@ -119,14 +119,17 @@ public class RegisterOrLogin extends  HttpServlet {
 
                         if(rs.next()){
                             // 有结果，那么去判断一下密码是否正确
-                            String pwd = rs.getString("password");
+                            String pwdMD5DB = rs.getString("password");
                             String user_id = rs.getString("user_id");
-                            if(pwd.equals(password)){
+
+                            String passwordMD5 = Util.stringToMD5(password);
+
+                            if(pwdMD5DB.equals(passwordMD5)){
                                 // 登录成功
                                 // 先在redis上set一下
                                 Jedis jedis = RedisUtil.getJedis();
                                 assert jedis != null;
-                                jedis.set(user_id, password);
+                                jedis.set(user_id, passwordMD5);
                                 jedis.close();
 
                                 //返回结果

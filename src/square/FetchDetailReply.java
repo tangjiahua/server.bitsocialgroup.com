@@ -56,7 +56,7 @@ public class FetchDetailReply extends HttpServlet {
                 switch(square_item_type){
                     case "broadcast":{
                         String sql_broadcast_reply = "SELECT reply_id, reply_from_user_id, nickname," +
-                                " avatar, reply_to_user_id, user_profile.nickname as reply_to_user_nickname, content," +
+                                " avatar, reply_to_user_id, content," +
                                 " create_date FROM broadcast_reply, user_profile " +
                                 " WHERE deleted = 0 AND broadcast_id = ? AND broadcast_reply.reply_from_user_id = user_profile.user_id" +
                                 " AND comment_id = ?";
@@ -70,7 +70,7 @@ public class FetchDetailReply extends HttpServlet {
 
                     case "circle":{
                         String sql_circle_reply = "SELECT reply_id, reply_from_user_id, nickname," +
-                                " avatar, reply_to_user_id, user_profile.nickname as reply_to_user_nickname, content," +
+                                " avatar, reply_to_user_id, content," +
                                 " create_date FROM circle_reply, user_profile " +
                                 " WHERE deleted = 0 AND circle_id = ? AND circle_reply.reply_from_user_id = user_profile.user_id" +
                                 " AND comment_id = ?";
@@ -94,10 +94,13 @@ public class FetchDetailReply extends HttpServlet {
 
     private void sqlExecute(HttpServletResponse response, String square_item_id, String comment_id, Connection conn, String sql_circle_reply) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(sql_circle_reply);
+        PreparedStatement stmtTemp;
+
         stmt.setInt(1, Integer.parseInt(square_item_id));
         stmt.setInt(2, Integer.parseInt(comment_id));
         ResultSet rs = stmt.executeQuery();
         JSONArray json_array_reply = new JSONArray();
+        String reply_to_user_id;
         while(rs.next()){
             JSONObject json_object = new JSONObject();
             json_object.put("reply_id",rs.getString("reply_id"));
@@ -105,13 +108,32 @@ public class FetchDetailReply extends HttpServlet {
             json_object.put("nickname", rs.getString("nickname"));
             json_object.put("avatar", rs.getString("avatar"));
             json_object.put("reply_to_user_id", rs.getString("reply_to_user_id"));
-            json_object.put("reply_to_user_nickname", rs.getString("reply_to_user_nickname"));
+
+            // 临时查找reply_to_user_id
+            reply_to_user_id = rs.getString("reply_to_user_id");
+            String sql_temp = "SELECT nickname FROM user_profile WHERE user_id = ?";
+            stmtTemp = conn.prepareStatement(sql_temp);
+            stmtTemp.setInt(1, Integer.parseInt(reply_to_user_id));
+            ResultSet rsTemp = stmtTemp.executeQuery();
+            if(rsTemp.next()){
+                json_object.put("reply_to_user_nickname", rsTemp.getString("nickname"));
+            }
+            rsTemp.close();
+            stmtTemp.close();
+
+
+
             json_object.put("content", rs.getString("content"));
             json_object.put("create_date", rs.getString("create_date"));
 
             json_array_reply.add(json_object);
         }
         rs.close();
+        stmt.close();
+        conn.close();
+
+
+
 
         JSONObject json_result = new JSONObject();
         json_result.put("reply", json_array_reply);

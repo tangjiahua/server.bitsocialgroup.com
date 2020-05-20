@@ -55,7 +55,11 @@ public class Search extends HttpServlet {
 
                 if(method.equals("1")){
                     searchByRealName(resp, info, conn);
-                }else{
+                }else if(method.equals("2")){
+                    searchByNickName(resp, info, conn);
+                }
+
+                else{
                     Response.responseError(resp, "fetch.java: 没有这样的method");
                 }
             }
@@ -67,6 +71,12 @@ public class Search extends HttpServlet {
     private void searchByRealName(HttpServletResponse response, String info, Connection conn) throws SQLException {
         String sql = "SELECT user_id, avatar, nickname, realname, gender, age " +
                 "FROM user_profile WHERE realname LIKE '%" + info + "%';";
+        fetchSql(response, sql, conn);
+    }
+
+    private void searchByNickName(HttpServletResponse response, String info, Connection conn) throws SQLException {
+        String sql = "SELECT user_id, avatar, nickname, realname, gender, age " +
+                "FROM user_profile WHERE nickname LIKE '%" + info + "%';";
         fetchSql(response, sql, conn);
     }
 

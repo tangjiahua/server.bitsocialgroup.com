@@ -146,7 +146,7 @@ public class PushPosterByUser extends HttpServlet {
     }
 
     private Boolean testWelcome(String welcome){
-        return (welcome.length() <= 200);
+        return (welcome.length() <= 400);
     }
 
     private Boolean testHoldDate(String holddate){
@@ -162,7 +162,7 @@ public class PushPosterByUser extends HttpServlet {
     }
 
     private Boolean testDetail(String detail){
-        return (detail.length() <= 400);
+        return (detail.length() <= 800);
     }
 
 

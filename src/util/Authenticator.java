@@ -45,7 +45,9 @@ public class Authenticator {
         assert jedis != null;
         if(jedis.exists(user_id)){
             String password_redis = jedis.get(user_id);
-            if(password.equals(password_redis)){
+
+            String passwordMD5 = Util.stringToMD5(password);
+            if(passwordMD5.equals(password_redis)){
                 //正确
                 jedis.close();
                 return true;
@@ -67,10 +69,11 @@ public class Authenticator {
 
         if(rs.next()){
             // 代表有结果
-            String pwd = rs.getString("password");
-            if(pwd.equals(password)){
+            String pwdMD5DB = rs.getString("password");
+            String passwordMD5 = Util.stringToMD5(password);
+            if(pwdMD5DB.equals(passwordMD5)){
                 //数据库中的结果是密码匹配，而redis中的结果是密码不匹配
-                jedis.set(user_id, password);
+                jedis.set(user_id, pwdMD5DB);
                 jedis.close();
                 //关闭链接
                 stmt.close();

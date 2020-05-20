@@ -9,7 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class Util {
 
@@ -39,45 +42,23 @@ public class Util {
         return JSONObject.fromObject(params);
     }
 
+    // MD5 encrypter
+    public static String stringToMD5(String plainText) {
+        plainText = plainText + "85d0311c3bfbf17ea4d2b61b8ae2f455";
+        byte[] secretBytes = null;
+        try {
+            secretBytes = MessageDigest.getInstance("md5").digest(
+                    plainText.getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("没有这个md5算法！");
+        }
+        String md5code = new BigInteger(1, secretBytes).toString(16);
+        for (int i = 0; i < 32 - md5code.length(); i++) {
+            md5code = "0" + md5code;
+        }
+        return md5code;
+    }
 
-
-//    /**
-//     * 通过文件路径直接修改文件名
-//     *
-//     * @param filePath    需要修改的文件的完整路径
-//     * @param newFileName 需要修改的文件的名称
-//     * @return
-//     */
-//    public static String fixFileName(String filePath, String newFileName) {
-//        File f = new File(filePath);
-//
-//        if (!f.exists()) { // 判断原文件是否存在（防止文件名冲突）
-//            return null;
-//        }
-//
-//        newFileName = newFileName.trim();
-//
-//        if ("".equals(newFileName)) // 文件名不能为空
-//            return null;
-//
-//
-//        String newFilePath = null;
-//
-//        if (f.isDirectory()) { // 判断是否为文件夹
-//            newFilePath = filePath.substring(0, filePath.lastIndexOf("/")) + "/" + newFileName;
-//        } else {
-//            newFilePath = filePath.substring(0, filePath.lastIndexOf("/")) + "/" + newFileName
-//                    + filePath.substring(filePath.lastIndexOf("."));
-//        }
-//        File nf = new File(newFilePath);
-//        try {
-//            f.renameTo(nf); // 修改文件名
-//        } catch (Exception err) {
-//            err.printStackTrace();
-//            return null;
-//        }
-//        return newFilePath;
-//    }
 
 
 }

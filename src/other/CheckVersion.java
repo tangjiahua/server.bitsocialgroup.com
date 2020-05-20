@@ -44,9 +44,9 @@ public class CheckVersion extends  HttpServlet {
         //判断所有字符串是否符合规范
 
         if(device_type.equals("android")){
-            Response.responseSuccessInfo(response, "1.0.0");
+            Response.responseSuccessInfo(response, "1.0");
         }else if(device_type.equals("ios")){
-            Response.responseSuccessInfo(response, "1.0.0");
+            Response.responseSuccessInfo(response, "1.0");
         }
 
 
